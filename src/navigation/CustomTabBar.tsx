@@ -10,8 +10,8 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
     switch (routeName) {
       case 'TasksTab':
         return 'clipboard-list';
-      case 'FieldVisitTab':
-        return 'map-search';
+      case 'HarvestTab':
+        return 'qrcode-scan';
       case 'HomeTab':
         return 'home';
       case 'RequestTab':
@@ -27,8 +27,8 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
     switch (routeName) {
       case 'TasksTab':
         return 'Tasks';
-      case 'FieldVisitTab':
-        return 'Field Visit';
+      case 'HarvestTab':
+        return 'Harvest';
       case 'HomeTab':
         return 'Home';
       case 'RequestTab':
@@ -40,12 +40,13 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
     }
   };
 
+  // Render all other tabs normally and render the Home center button absolutely centered
   return (
     <View style={styles.tabBarContainer}>
       <View style={styles.tabBar}>
         {state.routes.map((route, index) => {
-          const isFocused = state.index === index;
           const isCenterTab = route.name === 'HomeTab';
+          const isFocused = state.index === index;
 
           const onPress = () => {
             const event = navigation.emit({
@@ -72,7 +73,6 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
               </View>
             );
           }
-
           return (
             <TouchableOpacity
               key={route.key}
@@ -124,11 +124,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontWeight: '500',
   },
-  centerTabSpace: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   centerButton: {
     width: 64,
     height: 64,
@@ -138,11 +133,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     top: -32,
+    alignSelf: 'center',
     ...shadows.large,
     elevation: 8,
   },
   centerButtonActive: {
     backgroundColor: colors.primaryDark,
+  },
+  centerTabSpace: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

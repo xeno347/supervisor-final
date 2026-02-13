@@ -1,5 +1,6 @@
 // Helper utility functions
 import { Linking, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
@@ -156,4 +157,26 @@ export const getCropConditionColor = (condition: string): string => {
 export const truncateText = (text: string, maxLength: number): string => {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength) + '...';
+};
+
+// Get cached supervisor data
+export const getSupervisorData = async (): Promise<{ supervisor_id: string | null; name: string | null }> => {
+  try {
+    const supervisor_id = await AsyncStorage.getItem('supervisor_id');
+    const name = await AsyncStorage.getItem('supervisor_name');
+    return { supervisor_id, name };
+  } catch (error) {
+    console.error('Error getting supervisor data:', error);
+    return { supervisor_id: null, name: null };
+  }
+};
+
+// Clear supervisor cache
+export const clearSupervisorData = async (): Promise<void> => {
+  try {
+    await AsyncStorage.removeItem('supervisor_id');
+    await AsyncStorage.removeItem('supervisor_name');
+  } catch (error) {
+    console.error('Error clearing supervisor data:', error);
+  }
 };

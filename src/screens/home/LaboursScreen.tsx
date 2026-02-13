@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LabourCard from '../../components/LabourCard';
 import { Labour } from '../../types';
 import { colors, typography, spacing, borderRadius, shadows } from '../../utils/theme';
-import { mockLabour } from '../../utils/mockData';
+import { labour as mockLabour } from '../../utils/emptyData';
 import { makePhoneCall } from '../../utils/helpers';
 
 const LaboursScreen: React.FC = () => {

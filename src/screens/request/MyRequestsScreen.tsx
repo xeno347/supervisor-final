@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, ScrollView }
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RequestCard from '../../components/RequestCard';
 import { colors, typography, spacing, borderRadius, shadows } from '../../utils/theme';
-import { mockRequests } from '../../utils/mockData';
+import { requests as mockRequests } from '../../utils/emptyData';
 import { Request } from '../../types';
 import { formatDate, getPriorityColor } from '../../utils/helpers';
 

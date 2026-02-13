@@ -6,7 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Toast from 'react-native-toast-message';
 import VehicleCard from '../../components/VehicleCard';
 import { colors, typography, spacing, borderRadius, shadows } from '../../utils/theme';
-import { mockVehicles, mockFields, mockLabour } from '../../utils/mockData';
+import { vehicles as mockVehicles, fields as mockFields, labour as mockLabour } from '../../utils/emptyData';
 
 const VehiclesScreen: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState<'All' | 'Available' | 'In Use' | 'Maintenance'>('All');

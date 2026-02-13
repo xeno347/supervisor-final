@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Keyboa
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Toast from 'react-native-toast-message';
 import { colors, typography, spacing, borderRadius, shadows } from '../../utils/theme';
-import { mockFields } from '../../utils/mockData';
+import { fields as mockFields } from '../../utils/emptyData';
 import { generateId, getPriorityColor } from '../../utils/helpers';
 
 const MakeRequestScreen: React.FC<{ navigation: any }> = ({ navigation }) => {

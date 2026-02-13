@@ -19,14 +19,14 @@ import FieldCard from '../../components/FieldCard';
 import AttendanceButton from '../../components/AttendanceButton';
 import { colors, typography, spacing, borderRadius, shadows } from '../../utils/theme';
 import {
-  mockFields,
+  fields as mockFields,
   reportingOfficer,
   getActiveLabourCount,
   getActiveVehiclesCount,
   getTotalArea,
   getPendingVisitsCount,
   getCompletedVisitsToday,
-} from '../../utils/mockData';
+} from '../../utils/emptyData';
 import { makePhoneCall } from '../../utils/helpers';
 import { Field } from '../../types';
 
@@ -130,83 +130,56 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           userName={user?.name || ''}
         />
 
-        {/* Stats Grid */}
-        <View style={styles.statsGrid}>
-          <StatCard
-            label="Total Fields"
-            value={mockFields.length.toString()}
-            icon="map-marker-multiple"
-            color={colors.info}
-          />
-          <StatCard
-            label="Active Labour"
-            value={getActiveLabourCount().toString()}
-            icon="account-group"
-            color={colors.success}
-            onPress={() => navigation.navigate('HomeTab', { screen: 'Labours' })}
-          />
-          <StatCard
-            label="Active Vehicles"
-            value={getActiveVehiclesCount().toString()}
-            icon="truck"
-            color={colors.warning}
-            onPress={() => navigation.navigate('TasksTab')}
-          />
-          <StatCard
-            label="Total Area"
-            value={getTotalArea()}
-            icon="vector-square"
-            color={colors.primary}
-          />
-        </View>
-
-        {/* Field Visit Summary */}
-        <View style={styles.summaryCard}>
-          <View style={styles.summaryHeader}>
-            <Icon name="clipboard-check" size={24} color={colors.surface} />
-            <Text style={styles.summaryTitle}>Field Visit Summary</Text>
-          </View>
-          <View style={styles.summaryGrid}>
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>{getPendingVisitsCount()}</Text>
-              <Text style={styles.summaryLabel}>Pending Visits</Text>
-            </View>
-            <View style={styles.summaryDivider} />
-            <View style={styles.summaryItem}>
-              <View style={styles.completedRow}>
-                <Icon name="check-circle" size={20} color={colors.surface} />
-                <Text style={styles.summaryValue}>{getCompletedVisitsToday()}</Text>
-              </View>
-              <Text style={styles.summaryLabel}>Completed Today</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Your Allotted Fields */}
+        {/* Assigned Fields */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Your Allotted Fields</Text>
-          {userFields.map((field) => (
-            <FieldCard
-              key={field.id}
-              field={field}
-              onPress={() => handleFieldPress(field)}
-            />
-          ))}
+          <Text style={styles.sectionTitle}>Assigned Fields</Text>
+          {userFields.length > 0 ? (
+            userFields.map((field) => (
+              <FieldCard
+                key={field.id}
+                field={field}
+                onPress={() => handleFieldPress(field)}
+              />
+            ))
+          ) : (
+            <View style={styles.emptyState}>
+              <Icon name="map-marker-off" size={48} color={colors.textDisabled} />
+              <Text style={styles.emptyText}>No fields assigned</Text>
+            </View>
+          )}
+        </View>
+
+        {/* Workers Under Supervision */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Workers Under Your Supervision</Text>
+          <TouchableOpacity
+            style={styles.viewAllButton}
+            onPress={() => navigation.navigate('HomeTab', { screen: 'Labours' })}
+          >
+            <Text style={styles.viewAllText}>View All Workers</Text>
+            <Icon name="chevron-right" size={20} color={colors.primary} />
+          </TouchableOpacity>
         </View>
 
         {/* Reporting Officer */}
-        <View style={styles.reportingCard}>
-          <Text style={styles.reportingTitle}>Reporting Officer</Text>
-          <Text style={styles.reportingName}>{reportingOfficer.name}</Text>
-          <Text style={styles.reportingDesignation}>{reportingOfficer.designation}</Text>
-          <TouchableOpacity 
-            style={styles.phoneButton}
-            onPress={() => makePhoneCall(reportingOfficer.phone)}
-          >
-            <Icon name="phone" size={18} color={colors.primary} />
-            <Text style={styles.phoneText}>{reportingOfficer.phone}</Text>
-          </TouchableOpacity>
-        </View>
+        {(() => {
+          const officer = reportingOfficer;
+          if (!officer) return null;
+          return (
+            <View style={styles.reportingCard}>
+              <Text style={styles.reportingTitle}>Reporting Officer</Text>
+              <Text style={styles.reportingName}>{officer.name}</Text>
+              <Text style={styles.reportingDesignation}>{officer.designation}</Text>
+              <TouchableOpacity
+                style={styles.phoneButton}
+                onPress={() => makePhoneCall(officer.phone)}
+              >
+                <Icon name="phone" size={18} color={colors.primary} />
+                <Text style={styles.phoneText}>{officer.phone}</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        })()}
       </ScrollView>
 
       {/* Field Map Modal */}
@@ -359,6 +332,32 @@ const styles = StyleSheet.create({
     ...typography.h3,
     color: colors.textPrimary,
     marginBottom: spacing.md,
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.xl,
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.medium,
+  },
+  emptyText: {
+    ...typography.body,
+    color: colors.textDisabled,
+    marginTop: spacing.sm,
+  },
+  viewAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.surface,
+    padding: spacing.md,
+    borderRadius: borderRadius.medium,
+    ...shadows.small,
+  },
+  viewAllText: {
+    ...typography.body,
+    color: colors.primary,
+    fontWeight: '600',
   },
   reportingCard: {
     backgroundColor: colors.badgeGreen,

@@ -10,9 +10,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Toast from 'react-native-toast-message';
 import { useAuth } from '../../context/AuthContext';
 import { colors, typography, spacing, borderRadius, shadows } from '../../utils/theme';
 
@@ -27,11 +27,10 @@ const LoginScreen: React.FC = () => {
 
   const handleLogin = async () => {
     if (!supervisorId || !password) {
-      Toast.show({
-        type: 'error',
-        text1: 'Validation Error',
-        text2: 'Please enter both Supervisor ID and Password',
-      });
+      Alert.alert(
+        'Validation Error',
+        'Please enter both Supervisor ID and Password'
+      );
       return;
     }
 
@@ -39,24 +38,18 @@ const LoginScreen: React.FC = () => {
     try {
       const success = await login(supervisorId, password);
       if (success) {
-        Toast.show({
-          type: 'success',
-          text1: 'Login Successful',
-          text2: 'Welcome back!',
-        });
+        // Navigation happens automatically via AuthContext
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Login Failed',
-          text2: 'Invalid credentials. Please try again.',
-        });
+        Alert.alert(
+          'Login Failed',
+          'Invalid credentials. Please check your Supervisor ID and Password.'
+        );
       }
     } catch (error) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'An error occurred during login',
-      });
+      Alert.alert(
+        'Error',
+        'Unable to connect to server. Please check your internet connection and try again.'
+      );
     } finally {
       setLoading(false);
     }
@@ -137,12 +130,6 @@ const LoginScreen: React.FC = () => {
               <Text style={styles.loginButtonText}>Login</Text>
             )}
           </TouchableOpacity>
-
-          <View style={styles.demoContainer}>
-            <Text style={styles.demoTitle}>Demo Credentials:</Text>
-            <Text style={styles.demoText}>ID: SUP001</Text>
-            <Text style={styles.demoText}>Password: admin123</Text>
-          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -231,22 +218,6 @@ const styles = StyleSheet.create({
     ...typography.h4,
     color: colors.surface,
     fontWeight: 'bold',
-  },
-  demoContainer: {
-    marginTop: spacing.lg,
-    padding: spacing.md,
-    backgroundColor: colors.badgeGray,
-    borderRadius: borderRadius.small,
-  },
-  demoTitle: {
-    ...typography.caption,
-    color: colors.textPrimary,
-    fontWeight: '600',
-    marginBottom: spacing.xs,
-  },
-  demoText: {
-    ...typography.small,
-    color: colors.textSecondary,
   },
 });
 

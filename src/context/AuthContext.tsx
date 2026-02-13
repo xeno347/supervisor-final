@@ -2,7 +2,7 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User, Attendance } from '../types';
-import { mockUser, mockCredentials } from '../utils/mockData';
+import { supervisorLogin, LoginResponse } from '../utils/api';
 
 interface AuthContextType {
   user: User | null;
@@ -74,10 +74,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (supervisorId: string, password: string): Promise<boolean> => {
     try {
-      // Mock authentication
-      if (supervisorId === mockCredentials.supervisorId && password === mockCredentials.password) {
-        await AsyncStorage.setItem('user', JSON.stringify(mockUser));
-        setUser(mockUser);
+      // Call actual API
+      const response: LoginResponse = await supervisorLogin(supervisorId, password);
+      
+      if (response.success && response.supervisor_id && response.name) {
+        // Create user object with API data
+        const userData: User = {
+          id: response.supervisor_id,
+          supervisorId: response.supervisor_id,
+          name: response.name,
+          role: 'Agricultural Supervisor',
+          phone: '', // These will be updated from profile API later
+          email: '',
+          assignedFields: [],
+        };
+        
+        // Cache user data and credentials
+        await AsyncStorage.setItem('user', JSON.stringify(userData));
+        await AsyncStorage.setItem('supervisor_id', response.supervisor_id);
+        await AsyncStorage.setItem('supervisor_name', response.name);
+        
+        setUser(userData);
         setIsAuthenticated(true);
         return true;
       }
@@ -96,6 +113,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
       
       await AsyncStorage.removeItem('user');
+      await AsyncStorage.removeItem('supervisor_id');
+      await AsyncStorage.removeItem('supervisor_name');
       setUser(null);
       setIsAuthenticated(false);
       setAttendance(null);

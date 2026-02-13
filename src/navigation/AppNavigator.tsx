@@ -28,6 +28,10 @@ import MakeRequestScreen from '../screens/request/MakeRequestScreen';
 // Profile Screen
 import ProfileScreen from '../screens/profile/ProfileScreen';
 
+// Harvest Screens
+import HarvestOrdersScreen from '../screens/harvest/HarvestOrdersScreen';
+import HarvestScannerScreen from '../screens/harvest/HarvestScannerScreen';
+
 import { colors, typography } from '../utils/theme';
 
 const Stack = createStackNavigator();
@@ -46,7 +50,7 @@ const TasksTopTabs = () => {
         tabBarStyle: { backgroundColor: colors.surface },
       }}
     >
-      <TopTab.Screen name="Vehicles" component={VehiclesScreen} />
+      <TopTab.Screen name="FieldVisits" component={FieldVisitListScreen} options={{ title: 'Field Visits' }} />
       <TopTab.Screen name="Tasks" component={TasksScreen} />
     </TopTab.Navigator>
   );
@@ -66,15 +70,6 @@ const TasksStack = () => {
           headerTitleStyle: { ...typography.h3, fontWeight: 'bold' },
         }}
       />
-    </Stack.Navigator>
-  );
-};
-
-// Field Visit Tab Stack
-const FieldVisitStack = () => {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="FieldVisitList" component={FieldVisitListScreen} />
     </Stack.Navigator>
   );
 };
@@ -143,15 +138,39 @@ const ProfileStack = () => {
   );
 };
 
+// Harvest Tab Stack
+const HarvestStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: true }}>
+      <Stack.Screen
+        name="HarvestOrders"
+        component={HarvestOrdersScreen}
+        options={{
+          title: 'Harvest',
+          headerStyle: { backgroundColor: colors.primary },
+          headerTintColor: colors.surface,
+          headerTitleStyle: { ...typography.h3, fontWeight: 'bold' },
+        }}
+      />
+      <Stack.Screen
+        name="HarvestScanner"
+        component={HarvestScannerScreen}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 // Main Bottom Tab Navigator
 const MainTabs = () => {
   return (
     <Tab.Navigator
       tabBar={(props) => <CustomTabBar {...props} />}
+      initialRouteName="HomeTab"
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen name="TasksTab" component={TasksStack} />
-      <Tab.Screen name="FieldVisitTab" component={FieldVisitStack} />
+      <Tab.Screen name="HarvestTab" component={HarvestStack} />
       <Tab.Screen name="HomeTab" component={HomeStack} />
       <Tab.Screen name="RequestTab" component={RequestStack} />
       <Tab.Screen name="ProfileTab" component={ProfileStack} />

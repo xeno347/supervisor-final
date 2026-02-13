@@ -56,6 +56,20 @@ export interface Task {
   startDate: string;
   dueDate: string;
   progress: number;
+  // Farm details
+  farmLocation?: string;
+  farmArea?: string;
+  vehiclesAssigned?: string[];
+  // Status verification levels
+  selfVerified?: boolean;
+  fieldManagerVerified?: boolean;
+  farmerVerified?: boolean; // For contract farming only
+  // Number of acres completed for this task (optional)
+  completedAcres?: number;
+  // IDs of farms related to this task (from API farm_id values)
+  farmIds?: string[];
+  // Farming option for the task's farm (e.g. 'Lease Farming', 'Contract Farming')
+  farmingOption?: string;
 }
 
 export interface FieldVisit {
@@ -74,6 +88,16 @@ export interface FieldVisit {
     latitude: number;
     longitude: number;
   };
+  // Data collection fields
+  avgLengthLeaves?: number;
+  avgWidthLeaves?: number;
+  saplings?: number;
+  tillers?: number;
+  avgHeightPlant?: number;
+  moisture?: number;
+  temperature?: number;
+  npkValue?: string;
+  note?: string;
 }
 
 export interface Request {
